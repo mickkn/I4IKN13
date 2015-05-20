@@ -15,7 +15,7 @@ namespace Link {
   */
 Link::Link(int bufsize)
 {
-	buffer = new unsigned char[(bufsize*2)+2];
+	buffer = new unsigned char[(bufsize*2)+2]; // Den er da stor nok bufsize == BUFSIZE+ACKSIZE = 1004 lol?!
 	
     serialPort=v24OpenPort("/dev/ttyS0",V24_STANDARD);
     if ( serialPort==NULL )
@@ -141,7 +141,7 @@ short Link::receive(char buf[], short size) {
 	
 	int err, counter=0, realSize=0;
 	unsigned char begin = '0';
-	unsigned char tempBuf[size];
+	unsigned char tempBuf[size*2+6]; // Max = 2x1000 bytes DATA + 6 bytes HEADER (CHKSUM kan være AA)
 	
 	/* find det første 'A' */
 	while(v24Getc(serialPort) != 'A');

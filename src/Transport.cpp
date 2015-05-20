@@ -115,15 +115,17 @@ namespace Transport
 			//printf("[Transport.receive] Receiving...\n");
 			short n = 0;
 			
-			n = link->receive(buffer,size+4);
+			n = link->receive(buffer,size);
 
 			while(!checksum->checkChecksum(buffer,n)) {
 				sendAck(false);
-				n = link->receive(buffer,size+4);
+				n = link->receive(buffer,size);
 				printf("[Transport.receive] Checksum error\n");
+				errorCount++;
 			}
 			
 			sendAck(true);
+			printf("Error(s): %d\n", errorCount);
 			
 			if(seqNo == buffer[SEQNO]) {
 				seqNo = (buffer[SEQNO] + 1) % 2;
